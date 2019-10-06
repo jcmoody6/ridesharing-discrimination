@@ -1,0 +1,1 @@
+This repository contains supplemental information for the paper entitled “Rider-to-rider discriminatory attitudes and ridesharing behavior” published in Transportation Research Part F: Psychology and Behaviour (DOI: 10.1016/j.trf.2019.01.003).
