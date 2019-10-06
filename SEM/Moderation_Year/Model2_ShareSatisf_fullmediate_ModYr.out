@@ -1,0 +1,615 @@
+Mplus VERSION 8.1 (Mac)
+MUTHEN & MUTHEN
+06/20/2018   4:34 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Association of Discrimination and Satisfaction with Sharing
+
+  DATA:
+  	FILE = 20180527_CombinedData_ZipCheck_MPlus.txt;
+
+  VARIABLE:
+  	NAMES =
+    	X2016	
+      	RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6
+      	SD1 SD2 SD3 SD4 SD5 SD6 SD7 SD8
+      	Age Male Income Inc_1000 Unemploy Student
+      	White Black Hispanic Asian	
+      	Single SingleWomen Children WomenChild
+      	gradDeg colDeg HSDeg HSless
+      	UsesShare UberTrip ShareTrips EstShare O_Satisf S_Satisf
+      	FutShare ShareZIP;
+
+      USEVARIABLES =
+  	X2016
+  	RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6
+  	SD1 SD2 SD3 SD4 SD5 SD6 SD7 SD8
+  	Age Male Inc_1000 Unemploy Student gradDeg
+  	Black Hispanic Asian Single Children WomenChild
+  	UberTrip EstShare O_Satisf S_Satisf ShareZIP
+  	Edu_low;
+
+      USEOBSERVATIONS = UsesShare==1;
+
+      MISSING = ALL (-9999);
+
+  DEFINE:
+  Edu_low = HSDeg + HSless;
+
+  ANALYSIS:
+      ESTIMATOR = MLR;
+      TYPE = RANDOM;
+
+  MODEL:
+  ! Define the latent variable by its indicators
+      RS_Disc BY RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6;
+      SocDom BY SD1 SD2 SD3 SD4 SD5 SD6 SD7 SD8;
+  ! Add correlated erros
+      RSPref2 WITH RSPref4;
+      SD4 WITH SD3;
+      SD7 WITH SD8;
+      RS_Disc ON SocDom;
+  ! Structural Model
+      EstShare ON  Age Male Inc_1000 Unemploy Student gradDeg Edu_low
+                   Black Hispanic Asian Single Children WomenChild UberTrip
+                   ShareZIP;
+      S_Satisf ON  Age Male Inc_1000 Unemploy Student gradDeg Edu_low
+                   Black Hispanic Asian Single Children WomenChild UberTrip O_Satisf
+                   ShareZIP;
+
+     Moderate | X2016 XWITH RS_Disc;
+
+          EstShare (b0_est);
+          EstShare ON RS_Disc (b1_est);
+          EstShare ON X2016 (b2_est);
+          EstShare ON Moderate (b3_est);
+
+          S_Satisf (b0_sat);
+          S_Satisf ON RS_Disc (b1_sat);
+          S_Satisf ON X2016 (b2_sat);
+          S_Satisf ON Moderate (b3_sat);
+
+  MODEL CONSTRAINT:
+          NEW(LOW_Mod HIGH_Mod Slope_LOest Slope_HIest Slope_LOsat Slope_HIsat);
+          LOW_Mod = 0;
+          HIGH_Mod = 1;
+
+          ! Now calc slopes for each value of Moderate
+          Slope_LOest = b1_est + b3_est*LOW_Mod;
+          Slope_HIest = b1_est + b3_est*HIGH_Mod;
+
+          Slope_LOsat = b1_sat + b3_sat*LOW_Mod;
+          Slope_HIsat = b1_sat + b3_sat*HIGH_Mod;
+
+          ! Use loop plot to plot model for low, med, high values of Moderate
+          ! NOTE - values of 1,5 in LOOP() statement need to be replaced by
+          ! logical min and max limits of predictor (RS_Disc) used in analysis
+          PLOT(LOMOD_est HIMOD_est LOMOD_sat HIMOD_sat);
+          LOOP(XVAL,-1.3,4,0.1);
+          LOMOD_est = (b0_est + b2_est*LOW_Mod) + (b1_est + b3_est*LOW_Mod)*XVAL;
+          HIMOD_est = (b0_est + b2_est*HIGH_Mod) + (b1_est + b3_est*HIGH_Mod)*XVAL;
+      	
+          LOMOD_sat = (b0_sat + b2_sat*LOW_Mod) + (b1_sat + b3_sat*LOW_Mod)*XVAL;
+          HIMOD_sat = (b0_sat + b2_sat*HIGH_Mod) + (b1_sat + b3_sat*HIGH_Mod)*XVAL;
+
+  PLOT:
+         TYPE = plot2;
+
+  OUTPUT:
+      STDYX;
+      !SAMPSTAT MODINDICES(ALL);
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+*** WARNING in PLOT command
+  Note that only the first 8 characters of variable names are used in plots.
+  If variable names are not unique within the first 8 characters, problems
+  may occur.
+*** WARNING in OUTPUT command
+  STANDARDIZED (STD, STDY, STDYX) options for TYPE=RANDOM require ALGORITHM=INTEGRATION.
+  Request for STANDARDIZED (STD, STDY, STDYX) is ignored.
+*** WARNING
+  Data set contains cases with missing on x-variables.
+  These cases were not included in the analysis.
+  Number of cases with missing on x-variables:  1
+   4 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+Association of Discrimination and Satisfaction with Sharing
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                        1526
+
+Number of dependent variables                                   16
+Number of independent variables                                 17
+Number of continuous latent variables                            3
+
+Observed dependent variables
+
+  Continuous
+   RSPREF1     RSPREF2     RSPREF3     RSPREF4     RSPREF5     RSPREF6
+   SD1         SD2         SD3         SD4         SD5         SD6
+   SD7         SD8         ESTSHARE    S_SATISF
+
+Observed independent variables
+   X2016       AGE         MALE        INC_1000    UNEMPLOY    STUDENT
+   GRADDEG     BLACK       HISPANIC    ASIAN       SINGLE      CHILDREN
+   WOMENCHI    UBERTRIP    O_SATISF    SHAREZIP    EDU_LOW
+
+Continuous latent variables
+   RS_DISC     SOCDOM      MODERATE
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                   100
+Convergence criterion                                    0.100D-05
+Maximum number of EM iterations                                500
+Convergence criteria for the EM algorithm
+  Loglikelihood change                                   0.100D-02
+  Relative loglikelihood change                          0.100D-05
+  Derivative                                             0.100D-03
+Minimum variance                                         0.100D-03
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  20180527_CombinedData_ZipCheck_MPlus.txt
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT
+
+
+           Covariance Coverage
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        1.000
+ RSPREF2        1.000         1.000
+ RSPREF3        1.000         1.000         1.000
+ RSPREF4        1.000         1.000         1.000         1.000
+ RSPREF5        1.000         1.000         1.000         1.000         1.000
+ RSPREF6        1.000         1.000         1.000         1.000         1.000
+ SD1            1.000         1.000         1.000         1.000         1.000
+ SD2            1.000         1.000         1.000         1.000         1.000
+ SD3            1.000         1.000         1.000         1.000         1.000
+ SD4            1.000         1.000         1.000         1.000         1.000
+ SD5            1.000         1.000         1.000         1.000         1.000
+ SD6            1.000         1.000         1.000         1.000         1.000
+ SD7            1.000         1.000         1.000         1.000         1.000
+ SD8            1.000         1.000         1.000         1.000         1.000
+ ESTSHARE       1.000         1.000         1.000         1.000         1.000
+ S_SATISF       1.000         1.000         1.000         1.000         1.000
+ X2016          1.000         1.000         1.000         1.000         1.000
+ AGE            1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ INC_1000       1.000         1.000         1.000         1.000         1.000
+ UNEMPLOY       1.000         1.000         1.000         1.000         1.000
+ STUDENT        1.000         1.000         1.000         1.000         1.000
+ GRADDEG        1.000         1.000         1.000         1.000         1.000
+ BLACK          1.000         1.000         1.000         1.000         1.000
+ HISPANIC       1.000         1.000         1.000         1.000         1.000
+ ASIAN          1.000         1.000         1.000         1.000         1.000
+ SINGLE         1.000         1.000         1.000         1.000         1.000
+ CHILDREN       1.000         1.000         1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              RSPREF6       SD1           SD2           SD3           SD4
+              ________      ________      ________      ________      ________
+ RSPREF6        1.000
+ SD1            1.000         1.000
+ SD2            1.000         1.000         1.000
+ SD3            1.000         1.000         1.000         1.000
+ SD4            1.000         1.000         1.000         1.000         1.000
+ SD5            1.000         1.000         1.000         1.000         1.000
+ SD6            1.000         1.000         1.000         1.000         1.000
+ SD7            1.000         1.000         1.000         1.000         1.000
+ SD8            1.000         1.000         1.000         1.000         1.000
+ ESTSHARE       1.000         1.000         1.000         1.000         1.000
+ S_SATISF       1.000         1.000         1.000         1.000         1.000
+ X2016          1.000         1.000         1.000         1.000         1.000
+ AGE            1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ INC_1000       1.000         1.000         1.000         1.000         1.000
+ UNEMPLOY       1.000         1.000         1.000         1.000         1.000
+ STUDENT        1.000         1.000         1.000         1.000         1.000
+ GRADDEG        1.000         1.000         1.000         1.000         1.000
+ BLACK          1.000         1.000         1.000         1.000         1.000
+ HISPANIC       1.000         1.000         1.000         1.000         1.000
+ ASIAN          1.000         1.000         1.000         1.000         1.000
+ SINGLE         1.000         1.000         1.000         1.000         1.000
+ CHILDREN       1.000         1.000         1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              SD5           SD6           SD7           SD8           ESTSHARE
+              ________      ________      ________      ________      ________
+ SD5            1.000
+ SD6            1.000         1.000
+ SD7            1.000         1.000         1.000
+ SD8            1.000         1.000         1.000         1.000
+ ESTSHARE       1.000         1.000         1.000         1.000         1.000
+ S_SATISF       1.000         1.000         1.000         1.000         1.000
+ X2016          1.000         1.000         1.000         1.000         1.000
+ AGE            1.000         1.000         1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000         1.000
+ INC_1000       1.000         1.000         1.000         1.000         1.000
+ UNEMPLOY       1.000         1.000         1.000         1.000         1.000
+ STUDENT        1.000         1.000         1.000         1.000         1.000
+ GRADDEG        1.000         1.000         1.000         1.000         1.000
+ BLACK          1.000         1.000         1.000         1.000         1.000
+ HISPANIC       1.000         1.000         1.000         1.000         1.000
+ ASIAN          1.000         1.000         1.000         1.000         1.000
+ SINGLE         1.000         1.000         1.000         1.000         1.000
+ CHILDREN       1.000         1.000         1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              S_SATISF      X2016         AGE           MALE          INC_1000
+              ________      ________      ________      ________      ________
+ S_SATISF       1.000
+ X2016          1.000         1.000
+ AGE            1.000         1.000         1.000
+ MALE           1.000         1.000         1.000         1.000
+ INC_1000       1.000         1.000         1.000         1.000         1.000
+ UNEMPLOY       1.000         1.000         1.000         1.000         1.000
+ STUDENT        1.000         1.000         1.000         1.000         1.000
+ GRADDEG        1.000         1.000         1.000         1.000         1.000
+ BLACK          1.000         1.000         1.000         1.000         1.000
+ HISPANIC       1.000         1.000         1.000         1.000         1.000
+ ASIAN          1.000         1.000         1.000         1.000         1.000
+ SINGLE         1.000         1.000         1.000         1.000         1.000
+ CHILDREN       1.000         1.000         1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              UNEMPLOY      STUDENT       GRADDEG       BLACK         HISPANIC
+              ________      ________      ________      ________      ________
+ UNEMPLOY       1.000
+ STUDENT        1.000         1.000
+ GRADDEG        1.000         1.000         1.000
+ BLACK          1.000         1.000         1.000         1.000
+ HISPANIC       1.000         1.000         1.000         1.000         1.000
+ ASIAN          1.000         1.000         1.000         1.000         1.000
+ SINGLE         1.000         1.000         1.000         1.000         1.000
+ CHILDREN       1.000         1.000         1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              ASIAN         SINGLE        CHILDREN      WOMENCHI      UBERTRIP
+              ________      ________      ________      ________      ________
+ ASIAN          1.000
+ SINGLE         1.000         1.000
+ CHILDREN       1.000         1.000         1.000
+ WOMENCHI       1.000         1.000         1.000         1.000
+ UBERTRIP       1.000         1.000         1.000         1.000         1.000
+ O_SATISF       1.000         1.000         1.000         1.000         1.000
+ SHAREZIP       1.000         1.000         1.000         1.000         1.000
+ EDU_LOW        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              O_SATISF      SHAREZIP      EDU_LOW
+              ________      ________      ________
+ O_SATISF       1.000
+ SHAREZIP       1.000         1.000
+ EDU_LOW        1.000         1.000         1.000
+
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     RSPREF1              -1.431       0.865      -3.000   30.93%      -3.000     -2.000     -2.000
+            1526.000       2.329       0.050       3.000    2.03%      -1.000      0.000
+     RSPREF2              -1.014       0.433      -3.000   15.92%      -2.000     -2.000     -1.000
+            1526.000       1.955      -0.171       3.000    1.51%       0.000      0.000
+     RSPREF3              -1.289       0.712      -3.000   31.13%      -3.000     -2.000     -2.000
+            1526.000       2.662      -0.380       3.000    2.49%      -1.000      0.000
+     RSPREF4              -0.926       0.417      -3.000   17.43%      -2.000     -2.000     -1.000
+            1526.000       2.255      -0.338       3.000    2.36%       0.000      0.000
+     RSPREF5              -1.721       1.130      -3.000   41.42%      -3.000     -3.000     -2.000
+            1526.000       2.171       0.595       3.000    1.64%      -2.000      0.000
+     RSPREF6              -1.745       1.109      -3.000   37.68%      -3.000     -2.000     -2.000
+            1526.000       1.836       0.855       3.000    1.25%      -2.000      0.000
+     SD1                  -1.676       0.731      -7.000    0.52%      -3.000     -3.000     -2.000
+            1526.000       2.758       0.485       3.000    1.44%      -2.000      0.000
+     SD2                  -1.537       0.746      -7.000    0.39%      -3.000     -2.000     -2.000
+            1526.000       2.808       0.574       3.000    2.56%      -2.000      0.000
+     SD3                  -1.497       0.579      -7.000    0.52%      -3.000     -2.000     -2.000
+            1526.000       2.943       0.112       3.000    2.10%      -2.000      0.000
+     SD4                  -1.233       0.331      -7.000    0.52%      -3.000     -2.000     -2.000
+            1526.000       3.337      -0.324       3.000    2.82%      -1.000      0.000
+     SD5                  -1.446       0.837      -7.000    0.39%      -3.000     -2.000     -2.000
+            1526.000       3.224       0.529       3.000    5.24%      -2.000      0.000
+     SD6                  -1.580       0.633      -7.000    0.52%      -3.000     -3.000     -2.000
+            1526.000       3.067       0.121       3.000    2.03%      -2.000      0.000
+     SD7                  -1.678       0.767      -7.000    0.39%      -3.000     -2.000     -2.000
+            1526.000       2.538       0.804       3.000    2.03%      -2.000      0.000
+     SD8                  -1.455       0.637      -7.000    0.33%      -3.000     -2.000     -2.000
+            1526.000       2.805       0.384       3.000    2.88%      -1.000      0.000
+     ESTSHARE             37.140       0.743       0.000    0.98%       9.000     20.000     28.000
+            1526.000     966.549      -0.688     100.000    7.93%      39.000     70.000
+     S_SATISF              7.204      -0.631       1.000    0.72%       6.000      7.000      7.000
+            1526.000       3.569       0.269      10.000   11.53%       8.000      9.000
+     X2016                 0.501      -0.005       0.000   49.87%       0.000      0.000      1.000
+            1526.000       0.250      -2.000       1.000   50.13%       1.000      1.000
+     AGE                  31.294       1.510      20.000    0.26%      24.000     28.000     29.000
+            1526.000      75.421       3.408      86.000    0.07%      32.000     37.000
+     MALE                  0.564      -0.256       0.000   43.64%       0.000      0.000      1.000
+            1526.000       0.246      -1.934       1.000   56.36%       1.000      1.000
+     INC_1000             67.253       1.346      20.000   18.94%      40.000     40.000     62.500
+            1526.000    1945.937       1.816     225.000    1.64%      62.500     87.500
+     UNEMPLOY              0.057       3.821       0.000   94.30%       0.000      0.000      0.000
+            1526.000       0.054      12.601       1.000    5.70%       0.000      0.000
+     STUDENT               0.087       2.942       0.000   91.35%       0.000      0.000      0.000
+            1526.000       0.079       6.655       1.000    8.65%       0.000      0.000
+     GRADDEG               0.176       1.705       0.000   82.44%       0.000      0.000      0.000
+            1526.000       0.145       0.907       1.000   17.56%       0.000      0.000
+     BLACK                 0.094       2.788       0.000   90.63%       0.000      0.000      0.000
+            1526.000       0.085       5.775       1.000    9.37%       0.000      0.000
+     HISPANIC              0.072       3.309       0.000   92.79%       0.000      0.000      0.000
+            1526.000       0.067       8.950       1.000    7.21%       0.000      0.000
+     ASIAN                 0.115       2.408       0.000   88.47%       0.000      0.000      0.000
+            1526.000       0.102       3.801       1.000   11.53%       0.000      0.000
+     SINGLE                0.388       0.460       0.000   61.21%       0.000      0.000      0.000
+            1526.000       0.237      -1.788       1.000   38.79%       0.000      1.000
+     CHILDREN              0.270       1.036       0.000   73.00%       0.000      0.000      0.000
+            1526.000       0.197      -0.926       1.000   27.00%       0.000      1.000
+     WOMENCHILD            0.153       1.924       0.000   84.67%       0.000      0.000      0.000
+            1526.000       0.130       1.702       1.000   15.33%       0.000      0.000
+     UBERTRIP              5.277       6.422       1.000   17.04%       2.000      3.000      3.000
+            1526.000      44.765      76.241     120.000    0.07%       4.000      8.000
+     O_SATISF              7.910      -0.903       1.000    0.20%       7.000      8.000      8.000
+            1526.000       2.345       1.335      10.000   14.81%       8.000      9.000
+     SHAREZIP              0.681      -0.776       0.000   31.91%       0.000      1.000      1.000
+            1526.000       0.217      -1.398       1.000   68.09%       1.000      1.000
+     EDU_LOW               0.033       5.192       0.000   96.66%       0.000      0.000      0.000
+            1526.000       0.032      24.956       1.000    3.34%       0.000      0.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       88
+
+Loglikelihood
+
+          H0 Value                      -43664.986
+          H0 Scaling Correction Factor      1.3937
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   87505.971
+          Bayesian (BIC)                 87975.047
+          Sample-Size Adjusted BIC       87695.493
+            (n* = (n + 2) / 24)
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ RS_DISC  BY
+    RSPREF1            1.000      0.000    999.000    999.000
+    RSPREF2            0.832      0.033     25.564      0.000
+    RSPREF3            1.099      0.039     28.227      0.000
+    RSPREF4            0.891      0.036     24.796      0.000
+    RSPREF5            1.099      0.034     32.380      0.000
+    RSPREF6            0.995      0.036     27.991      0.000
+
+ SOCDOM   BY
+    SD1                1.000      0.000    999.000    999.000
+    SD2                0.774      0.029     26.778      0.000
+    SD3                1.042      0.021     50.745      0.000
+    SD4                1.000      0.025     40.332      0.000
+    SD5                0.681      0.030     22.705      0.000
+    SD6                1.030      0.021     48.013      0.000
+    SD7                0.820      0.026     31.366      0.000
+    SD8                0.803      0.028     28.328      0.000
+
+ RS_DISC    ON
+    SOCDOM             0.476      0.029     16.290      0.000
+
+ ESTSHARE   ON
+    RS_DISC           -1.364      1.182     -1.154      0.248
+    MODERATE           0.352      1.522      0.231      0.817
+
+ S_SATISF   ON
+    RS_DISC           -0.147      0.051     -2.897      0.004
+    MODERATE           0.036      0.079      0.448      0.654
+
+ ESTSHARE   ON
+    AGE               -0.105      0.102     -1.031      0.302
+    MALE              -0.369      1.886     -0.196      0.845
+    INC_1000          -0.027      0.019     -1.439      0.150
+    UNEMPLOY          -4.877      3.136     -1.555      0.120
+    STUDENT            7.382      3.061      2.412      0.016
+    GRADDEG            4.508      2.126      2.120      0.034
+    EDU_LOW           -3.697      4.511     -0.819      0.413
+    BLACK              2.947      2.649      1.113      0.266
+    HISPANIC           1.491      3.063      0.487      0.626
+    ASIAN              7.700      2.481      3.103      0.002
+    SINGLE             4.516      1.721      2.624      0.009
+    CHILDREN           3.997      2.674      1.495      0.135
+    WOMENCHILD         1.380      3.615      0.382      0.703
+    UBERTRIP           0.557      0.193      2.888      0.004
+    SHAREZIP           5.841      1.680      3.476      0.001
+    X2016             -8.857      1.587     -5.580      0.000
+
+ S_SATISF   ON
+    AGE                0.004      0.004      0.806      0.420
+    MALE               0.116      0.097      1.193      0.233
+    INC_1000          -0.002      0.001     -2.230      0.026
+    UNEMPLOY          -0.172      0.144     -1.195      0.232
+    STUDENT            0.093      0.130      0.716      0.474
+    GRADDEG           -0.151      0.109     -1.382      0.167
+    EDU_LOW           -0.124      0.210     -0.592      0.554
+    BLACK              0.221      0.151      1.470      0.141
+    HISPANIC           0.094      0.138      0.681      0.496
+    ASIAN              0.198      0.113      1.748      0.080
+    SINGLE             0.085      0.086      0.990      0.322
+    CHILDREN           0.182      0.137      1.329      0.184
+    WOMENCHILD         0.193      0.178      1.086      0.278
+    UBERTRIP          -0.001      0.007     -0.160      0.873
+    O_SATISF           0.695      0.029     24.192      0.000
+    SHAREZIP          -0.047      0.083     -0.567      0.571
+    X2016             -0.193      0.082     -2.351      0.019
+
+ RSPREF2  WITH
+    RSPREF4            0.472      0.043     10.957      0.000
+
+ SD4      WITH
+    SD3                0.354      0.050      7.107      0.000
+
+ SD7      WITH
+    SD8                0.482      0.052      9.283      0.000
+
+ S_SATISF WITH
+    ESTSHARE          11.969      1.133     10.568      0.000
+
+ Intercepts
+    RSPREF1           -1.431      0.039    -36.634      0.000
+    RSPREF2           -1.014      0.036    -28.327      0.000
+    RSPREF3           -1.289      0.042    -30.865      0.000
+    RSPREF4           -0.926      0.038    -24.090      0.000
+    RSPREF5           -1.721      0.038    -45.624      0.000
+    RSPREF6           -1.745      0.035    -50.311      0.000
+    SD1               -1.676      0.043    -39.417      0.000
+    SD2               -1.537      0.043    -35.822      0.000
+    SD3               -1.497      0.044    -34.096      0.000
+    SD4               -1.233      0.047    -26.372      0.000
+    SD5               -1.446      0.046    -31.468      0.000
+    SD6               -1.580      0.045    -35.245      0.000
+    SD7               -1.678      0.041    -41.135      0.000
+    SD8               -1.455      0.043    -33.933      0.000
+    ESTSHARE          34.634      4.074      8.500      0.000
+    S_SATISF           1.677      0.290      5.776      0.000
+
+ Variances
+    SOCDOM             2.120      0.110     19.200      0.000
+
+ Residual Variances
+    RSPREF1            1.063      0.086     12.341      0.000
+    RSPREF2            1.079      0.050     21.565      0.000
+    RSPREF3            1.133      0.075     15.011      0.000
+    RSPREF4            1.250      0.066     19.075      0.000
+    RSPREF5            0.643      0.058     11.090      0.000
+    RSPREF6            0.584      0.040     14.631      0.000
+    SD1                0.637      0.046     13.813      0.000
+    SD2                1.539      0.111     13.806      0.000
+    SD3                0.640      0.053     12.014      0.000
+    SD4                1.216      0.083     14.635      0.000
+    SD5                2.240      0.147     15.229      0.000
+    SD6                0.815      0.061     13.335      0.000
+    SD7                1.111      0.086     12.901      0.000
+    SD8                1.436      0.105     13.643      0.000
+    ESTSHARE         898.468     28.614     31.400      0.000
+    S_SATISF           2.271      0.124     18.334      0.000
+    RS_DISC            0.786      0.057     13.744      0.000
+
+New/Additional Parameters
+    LOW_MOD            0.000      0.000      0.000      1.000
+    HIGH_MOD           1.000      0.000  *********      0.000
+    SLOPE_LO          -1.364      1.182     -1.154      0.248
+    SLOPE_HI          -1.012      0.964     -1.049      0.294
+    SLOPE_LO          -0.147      0.051     -2.897      0.004
+    SLOPE_HI          -0.111      0.064     -1.749      0.080
+    LOMOD_ES         898.468     29.018     30.962      0.000
+    HIMOD_ES         889.611     28.983     30.694      0.000
+    LOMOD_SA           2.271      0.232      9.774      0.000
+    HIMOD_SA           2.078      0.287      7.228      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.124E-07
+       (ratio of smallest to largest eigenvalue)
+
+
+PLOT INFORMATION
+
+The following plots are available:
+
+  Loop plots
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    /Users/jcmoody/Dropbox (MIT)/RSPref_and_Behavior/Analysis/0619/20180619_RSPref_ShareSatisf_fullmediate_ModYr.dgm
+
+     Beginning Time:  16:34:19
+        Ending Time:  16:34:51
+       Elapsed Time:  00:00:32
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2018 Muthen & Muthen

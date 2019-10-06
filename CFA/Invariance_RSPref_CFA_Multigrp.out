@@ -1,0 +1,607 @@
+Mplus VERSION 8 (Mac)
+MUTHEN & MUTHEN
+05/29/2018   5:14 PM
+
+INPUT INSTRUCTIONS
+
+  TITLE: Ridesharing Discrimination CFA
+
+  DATA:
+  	FILE = 20180527_CombinedData_ZipCheck_MPlus.txt;
+
+  VARIABLE:
+  	NAMES =
+    	X2016	
+      	RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6
+      	SD1 SD2 SD3 SD4 SD5 SD6 SD7 SD8
+      	Age Male Income Inc_1000 Unemploy Student
+      	White Black Hispanic Asian	
+      	Single SingleWomen Children WomenChild
+      	gradDeg colDeg HSDeg HSless
+      	UsesShare UberTrip ShareTrips EstShare O_Satisf S_Satisf
+      	FutShare ShareZIP;
+
+      USEVARIABLES =
+  	RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6;
+  	
+      GROUPING = X2016 (1 = 2016 0 = 2018);
+
+      MISSING = ALL (-9999);
+
+  ANALYSIS:
+      ESTIMATOR = MLR;
+      TYPE = mgroup;
+
+  MODEL:
+  ! Define the latent variable by its indicators
+      RSDisc BY RSPref1 RSPref2 RSPref3 RSPref4 RSPref5 RSPref6;
+      RSPref2 WITH RSPref4;
+
+  !SAVEDATA:
+  !    FILE IS 20180527_RSDisc_CFA_fscores.dat;
+  !    SAVE = FSCORES;
+
+  OUTPUT:
+      STDYX SAMPSTAT MODINDICES(ALL);
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+Ridesharing Discrimination CFA
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 2
+Number of observations
+   Group 2018                                                 1026
+   Group 2016                                                 1015
+   Total sample size                                          2041
+
+Number of dependent variables                                    6
+Number of independent variables                                  0
+Number of continuous latent variables                            1
+
+Observed dependent variables
+
+  Continuous
+   RSPREF1     RSPREF2     RSPREF3     RSPREF4     RSPREF5     RSPREF6
+
+Continuous latent variables
+   RSDISC
+
+Variables with special functions
+
+  Grouping variable     X2016
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Maximum number of iterations                                  1000
+Convergence criterion                                    0.500D-04
+Maximum number of steepest descent iterations                   20
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+
+Input data file(s)
+  20180527_CombinedData_ZipCheck_MPlus.txt
+
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+   Group 2018
+     Number of missing data patterns             1
+
+   Group 2016
+     Number of missing data patterns             1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+     PROPORTION OF DATA PRESENT FOR 2018
+
+
+           Covariance Coverage
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        1.000
+ RSPREF2        1.000         1.000
+ RSPREF3        1.000         1.000         1.000
+ RSPREF4        1.000         1.000         1.000         1.000
+ RSPREF5        1.000         1.000         1.000         1.000         1.000
+ RSPREF6        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              RSPREF6
+              ________
+ RSPREF6        1.000
+
+
+     PROPORTION OF DATA PRESENT FOR 2016
+
+
+           Covariance Coverage
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        1.000
+ RSPREF2        1.000         1.000
+ RSPREF3        1.000         1.000         1.000
+ RSPREF4        1.000         1.000         1.000         1.000
+ RSPREF5        1.000         1.000         1.000         1.000         1.000
+ RSPREF6        1.000         1.000         1.000         1.000         1.000
+
+
+           Covariance Coverage
+              RSPREF6
+              ________
+ RSPREF6        1.000
+
+
+SAMPLE STATISTICS
+
+
+     ESTIMATED SAMPLE STATISTICS FOR 2018
+
+
+           Means
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+               -1.436        -1.091        -1.323        -0.966        -1.794
+
+
+           Means
+              RSPREF6
+              ________
+               -1.852
+
+
+           Covariances
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        2.404
+ RSPREF2        1.084         1.993
+ RSPREF3        1.500         1.253         2.797
+ RSPREF4        1.176         1.483         1.491         2.306
+ RSPREF5        1.462         1.136         1.549         1.125         2.107
+ RSPREF6        1.167         1.108         1.316         1.058         1.376
+
+
+           Covariances
+              RSPREF6
+              ________
+ RSPREF6        1.688
+
+
+           Correlations
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        1.000
+ RSPREF2        0.495         1.000
+ RSPREF3        0.578         0.531         1.000
+ RSPREF4        0.499         0.692         0.587         1.000
+ RSPREF5        0.650         0.554         0.638         0.510         1.000
+ RSPREF6        0.579         0.604         0.606         0.536         0.730
+
+
+           Correlations
+              RSPREF6
+              ________
+ RSPREF6        1.000
+
+
+     ESTIMATED SAMPLE STATISTICS FOR 2016
+
+
+           Means
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+               -1.488        -0.974        -1.333        -0.908        -1.701
+
+
+           Means
+              RSPREF6
+              ________
+               -1.726
+
+
+           Covariances
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        2.248
+ RSPREF2        1.073         1.932
+ RSPREF3        1.289         0.949         2.370
+ RSPREF4        1.077         1.287         1.220         2.097
+ RSPREF5        1.353         1.015         1.251         0.999         2.079
+ RSPREF6        1.161         1.077         1.092         1.138         1.376
+
+
+           Covariances
+              RSPREF6
+              ________
+ RSPREF6        1.805
+
+
+           Correlations
+              RSPREF1       RSPREF2       RSPREF3       RSPREF4       RSPREF5
+              ________      ________      ________      ________      ________
+ RSPREF1        1.000
+ RSPREF2        0.515         1.000
+ RSPREF3        0.558         0.444         1.000
+ RSPREF4        0.496         0.639         0.547         1.000
+ RSPREF5        0.626         0.506         0.564         0.479         1.000
+ RSPREF6        0.576         0.577         0.528         0.585         0.710
+
+
+           Correlations
+              RSPREF6
+              ________
+ RSPREF6        1.000
+
+
+     MAXIMUM LOG-LIKELIHOOD VALUE FOR THE UNRESTRICTED (H1) MODEL IS -18760.902
+
+
+UNIVARIATE SAMPLE STATISTICS
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS FOR 2018
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     RSPREF1              -1.436       0.954      -3.000   30.21%      -3.000     -2.000     -2.000
+            1026.000       2.404       0.181       3.000    2.34%      -2.000      0.000
+     RSPREF2              -1.091       0.483      -3.000   18.03%      -2.000     -2.000     -1.000
+            1026.000       1.993      -0.191       3.000    1.46%      -1.000      0.000
+     RSPREF3              -1.323       0.843      -3.000   31.48%      -3.000     -2.000     -2.000
+            1026.000       2.797      -0.223       3.000    3.22%      -1.000      0.000
+     RSPREF4              -0.966       0.427      -3.000   19.30%      -2.000     -2.000     -1.000
+            1026.000       2.306      -0.359       3.000    2.44%       0.000      0.000
+     RSPREF5              -1.794       1.246      -3.000   43.27%      -3.000     -3.000     -2.000
+            1026.000       2.107       0.868       3.000    1.36%      -2.000     -1.000
+     RSPREF6              -1.852       1.343      -3.000   39.08%      -3.000     -2.000     -2.000
+            1026.000       1.688       1.735       3.000    1.27%      -2.000     -1.000
+
+
+     UNIVARIATE HIGHER-ORDER MOMENT DESCRIPTIVE STATISTICS FOR 2016
+
+         Variable/         Mean/     Skewness/   Minimum/ % with                Percentiles
+        Sample Size      Variance    Kurtosis    Maximum  Min/Max      20%/60%    40%/80%    Median
+
+     RSPREF1              -1.488       0.888      -3.000   32.41%      -3.000     -2.000     -2.000
+            1015.000       2.248       0.110       3.000    1.67%      -1.000      0.000
+     RSPREF2              -0.974       0.467      -3.000   13.89%      -2.000     -2.000     -1.000
+            1015.000       1.932      -0.084       3.000    1.67%       0.000      0.000
+     RSPREF3              -1.333       0.636      -3.000   30.54%      -3.000     -2.000     -2.000
+            1015.000       2.370      -0.418       3.000    1.58%      -1.000      0.000
+     RSPREF4              -0.908       0.457      -3.000   14.48%      -2.000     -1.000     -1.000
+            1015.000       2.097      -0.158       3.000    2.36%       0.000      0.000
+     RSPREF5              -1.701       1.088      -3.000   38.72%      -3.000     -2.000     -2.000
+            1015.000       2.079       0.528       3.000    1.48%      -2.000      0.000
+     RSPREF6              -1.726       0.992      -3.000   37.54%      -3.000     -2.000     -2.000
+            1015.000       1.805       0.513       3.000    0.99%      -2.000      0.000
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       28
+
+Loglikelihood
+
+          H0 Value                      -18883.285
+          H0 Scaling Correction Factor      1.7090
+            for MLR
+          H1 Value                      -18760.902
+          H1 Scaling Correction Factor      1.5349
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                   37822.570
+          Bayesian (BIC)                 37979.963
+          Sample-Size Adjusted BIC       37891.005
+            (n* = (n + 2) / 24)
+
+Chi-Square Test of Model Fit
+
+          Value                            181.638*
+          Degrees of Freedom                    26
+          P-Value                           0.0000
+          Scaling Correction Factor         1.3475
+            for MLR
+
+Chi-Square Contribution From Each Group
+
+          2018                              78.980
+          2016                             102.658
+
+*   The chi-square value for MLM, MLMV, MLR, ULSMV, WLSM and WLSMV cannot be used
+    for chi-square difference testing in the regular way.  MLM, MLR and WLSM
+    chi-square difference testing is described on the Mplus website.  MLMV, WLSMV,
+    and ULSMV difference testing is done using the DIFFTEST option.
+
+RMSEA (Root Mean Square Error Of Approximation)
+
+          Estimate                           0.077
+          90 Percent C.I.                    0.066  0.087
+          Probability RMSEA <= .05           0.000
+
+CFI/TLI
+
+          CFI                                0.954
+          TLI                                0.947
+
+Chi-Square Test of Model Fit for the Baseline Model
+
+          Value                           3389.903
+          Degrees of Freedom                    30
+          P-Value                           0.0000
+
+SRMR (Standardized Root Mean Square Residual)
+
+          Value                              0.035
+
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group 2018
+
+ RSDISC   BY
+    RSPREF1            1.000      0.000    999.000    999.000
+    RSPREF2            0.836      0.028     29.653      0.000
+    RSPREF3            1.035      0.036     28.609      0.000
+    RSPREF4            0.870      0.031     27.976      0.000
+    RSPREF5            1.073      0.029     36.783      0.000
+    RSPREF6            0.965      0.032     30.416      0.000
+
+ RSPREF2  WITH
+    RSPREF4            0.521      0.047     11.170      0.000
+
+ Means
+    RSDISC             0.000      0.000    999.000    999.000
+
+ Intercepts
+    RSPREF1           -1.497      0.043    -34.653      0.000
+    RSPREF2           -1.062      0.039    -27.425      0.000
+    RSPREF3           -1.362      0.046    -29.432      0.000
+    RSPREF4           -0.965      0.041    -23.747      0.000
+    RSPREF5           -1.784      0.043    -41.079      0.000
+    RSPREF6           -1.823      0.039    -46.617      0.000
+
+ Variances
+    RSDISC             1.329      0.095     13.955      0.000
+
+ Residual Variances
+    RSPREF1            1.098      0.107     10.277      0.000
+    RSPREF2            1.059      0.049     21.680      0.000
+    RSPREF3            1.218      0.101     12.091      0.000
+    RSPREF4            1.316      0.080     16.487      0.000
+    RSPREF5            0.568      0.060      9.411      0.000
+    RSPREF6            0.515      0.045     11.329      0.000
+
+Group 2016
+
+ RSDISC   BY
+    RSPREF1            1.000      0.000    999.000    999.000
+    RSPREF2            0.836      0.028     29.653      0.000
+    RSPREF3            1.035      0.036     28.609      0.000
+    RSPREF4            0.870      0.031     27.976      0.000
+    RSPREF5            1.073      0.029     36.783      0.000
+    RSPREF6            0.965      0.032     30.416      0.000
+
+ RSPREF2  WITH
+    RSPREF4            0.394      0.055      7.184      0.000
+
+ Means
+    RSDISC             0.066      0.053      1.243      0.214
+
+ Intercepts
+    RSPREF1           -1.497      0.043    -34.653      0.000
+    RSPREF2           -1.062      0.039    -27.425      0.000
+    RSPREF3           -1.362      0.046    -29.432      0.000
+    RSPREF4           -0.965      0.041    -23.747      0.000
+    RSPREF5           -1.784      0.043    -41.079      0.000
+    RSPREF6           -1.823      0.039    -46.617      0.000
+
+ Variances
+    RSDISC             1.228      0.084     14.546      0.000
+
+ Residual Variances
+    RSPREF1            0.998      0.094     10.606      0.000
+    RSPREF2            1.088      0.068     15.965      0.000
+    RSPREF3            1.208      0.091     13.229      0.000
+    RSPREF4            1.153      0.079     14.567      0.000
+    RSPREF5            0.678      0.077      8.853      0.000
+    RSPREF6            0.594      0.050     11.871      0.000
+
+
+STANDARDIZED MODEL RESULTS
+
+
+STDYX Standardization
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Group 2018
+
+ RSDISC   BY
+    RSPREF1            0.740      0.023     32.241      0.000
+    RSPREF2            0.683      0.019     36.157      0.000
+    RSPREF3            0.734      0.023     31.532      0.000
+    RSPREF4            0.658      0.022     30.547      0.000
+    RSPREF5            0.854      0.016     54.650      0.000
+    RSPREF6            0.840      0.014     58.664      0.000
+
+ RSPREF2  WITH
+    RSPREF4            0.441      0.036     12.322      0.000
+
+ Means
+    RSDISC             0.000      0.000    999.000    999.000
+
+ Intercepts
+    RSPREF1           -0.961      0.044    -21.625      0.000
+    RSPREF2           -0.753      0.036    -21.111      0.000
+    RSPREF3           -0.838      0.042    -20.079      0.000
+    RSPREF4           -0.633      0.033    -19.271      0.000
+    RSPREF5           -1.232      0.057    -21.747      0.000
+    RSPREF6           -1.378      0.062    -22.190      0.000
+
+ Variances
+    RSDISC             1.000      0.000    999.000    999.000
+
+ Residual Variances
+    RSPREF1            0.452      0.034     13.317      0.000
+    RSPREF2            0.533      0.026     20.624      0.000
+    RSPREF3            0.461      0.034     13.488      0.000
+    RSPREF4            0.567      0.028     20.003      0.000
+    RSPREF5            0.271      0.027     10.150      0.000
+    RSPREF6            0.294      0.024     12.212      0.000
+
+Group 2016
+
+ RSDISC   BY
+    RSPREF1            0.743      0.022     33.217      0.000
+    RSPREF2            0.664      0.020     32.771      0.000
+    RSPREF3            0.722      0.020     36.515      0.000
+    RSPREF4            0.668      0.022     30.839      0.000
+    RSPREF5            0.822      0.019     43.555      0.000
+    RSPREF6            0.811      0.016     49.719      0.000
+
+ RSPREF2  WITH
+    RSPREF4            0.352      0.042      8.390      0.000
+
+ Means
+    RSDISC             0.060      0.048      1.256      0.209
+
+ Intercepts
+    RSPREF1           -1.004      0.040    -24.799      0.000
+    RSPREF2           -0.761      0.033    -22.972      0.000
+    RSPREF3           -0.857      0.036    -23.513      0.000
+    RSPREF4           -0.669      0.033    -20.344      0.000
+    RSPREF5           -1.234      0.045    -27.368      0.000
+    RSPREF6           -1.384      0.046    -29.826      0.000
+
+ Variances
+    RSDISC             1.000      0.000    999.000    999.000
+
+ Residual Variances
+    RSPREF1            0.448      0.033     13.495      0.000
+    RSPREF2            0.559      0.027     20.796      0.000
+    RSPREF3            0.479      0.029     16.764      0.000
+    RSPREF4            0.554      0.029     19.147      0.000
+    RSPREF5            0.324      0.031     10.448      0.000
+    RSPREF6            0.342      0.026     12.915      0.000
+
+
+R-SQUARE
+
+Group 2018
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    RSPREF1            0.548      0.034     16.121      0.000
+    RSPREF2            0.467      0.026     18.079      0.000
+    RSPREF3            0.539      0.034     15.766      0.000
+    RSPREF4            0.433      0.028     15.274      0.000
+    RSPREF5            0.729      0.027     27.325      0.000
+    RSPREF6            0.706      0.024     29.332      0.000
+
+Group 2016
+
+    Observed                                        Two-Tailed
+    Variable        Estimate       S.E.  Est./S.E.    P-Value
+
+    RSPREF1            0.552      0.033     16.609      0.000
+    RSPREF2            0.441      0.027     16.386      0.000
+    RSPREF3            0.521      0.029     18.257      0.000
+    RSPREF4            0.446      0.029     15.420      0.000
+    RSPREF5            0.676      0.031     21.778      0.000
+    RSPREF6            0.658      0.026     24.859      0.000
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.212E-01
+       (ratio of smallest to largest eigenvalue)
+
+
+MODEL MODIFICATION INDICES
+
+Minimum M.I. value for printing the modification index    10.000
+
+                                   M.I.     E.P.C.  Std E.P.C.  StdYX E.P.C.
+Group 2018
+
+
+ON Statements
+
+RSPREF1  ON RSPREF6               12.020    -0.088     -0.088       -0.075
+RSPREF3  ON RSPREF4               24.418     0.147      0.147        0.138
+RSPREF4  ON RSPREF3               10.166     0.074      0.074        0.079
+
+WITH Statements
+
+RSPREF4  WITH RSPREF3             35.015     0.270      0.270        0.213
+RSPREF5  WITH RSPREF4             12.491    -0.126     -0.126       -0.146
+RSPREF6  WITH RSPREF1             15.015    -0.149     -0.149       -0.198
+RSPREF6  WITH RSPREF2             12.882     0.108      0.108        0.146
+
+Group 2016
+
+
+ON Statements
+
+RSPREF4  ON RSPREF3               13.583     0.085      0.085        0.094
+RSPREF5  ON RSPREF4               22.169    -0.120     -0.120       -0.119
+
+WITH Statements
+
+RSPREF4  WITH RSPREF3             27.175     0.237      0.237        0.201
+RSPREF5  WITH RSPREF4             27.131    -0.198     -0.198       -0.224
+RSPREF6  WITH RSPREF1             13.455    -0.144     -0.144       -0.187
+RSPREF6  WITH RSPREF3             20.135    -0.189     -0.189       -0.223
+RSPREF6  WITH RSPREF5             26.723     0.197      0.197        0.310
+
+
+
+DIAGRAM INFORMATION
+
+  Use View Diagram under the Diagram menu in the Mplus Editor to view the diagram.
+  If running Mplus from the Mplus Diagrammer, the diagram opens automatically.
+
+  Diagram output
+    /Users/jcmoody/Dropbox (MIT)/RSPref_and_Behavior/Analysis/0527/20180527_RSPref_CFA_Multigrp.dgm
+
+     Beginning Time:  17:14:34
+        Ending Time:  17:14:34
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2017 Muthen & Muthen
